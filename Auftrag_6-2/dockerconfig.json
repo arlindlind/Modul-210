@@ -1,0 +1,9 @@
+{
+  "auths": {
+    "ghcr.io": {
+      "username": "GITHUB_USERNAME",
+      "password": "GITHUB_TOKEN",
+      "auth": "BASE64_ENCODED_AUTH"
+    }
+  }
+}
