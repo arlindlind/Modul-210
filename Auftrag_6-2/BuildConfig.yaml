@@ -1,0 +1,44 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: html-openshift-app
+  labels:
+    app: html-openshift-app
+spec:
+  source:
+    type: Git
+    git:
+      uri: 'https://github.com/arlindlind/Modul-210.git'
+      ref: main
+    contextDir: .
+  strategy:
+    type: Docker
+    dockerStrategy: {}
+    # Falls in deinem Cluster Docker-Builds nicht erlaubt sind, kannst du alternativ
+    # die Custom-Strategie mit einem Builder-Image (z. B. Buildah) verwenden.
+  output:
+    to:
+      kind: ImageStreamTag
+      name: html-openshift-app:v1
+  triggers:
+    - type: GitHub
+      github:
+        secretReference:
+          name: my-webhook-secret
+    - type: ConfigChange
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-webhook-secret
+data:
+  # Hier wird "secret" Base64-kodiert – z. B. ergibt "secret" (ohne Anführungszeichen)
+  # Base64: echo -n "secret" | base64  →  c2VjcmV0
+  WebHookSecretKey: c2VjcmV0
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: html-openshift-app
+  labels:
+    app: html-openshift-app
